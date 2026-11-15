@@ -1,66 +1,120 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  StyleSheet, 
-  View, 
-  Text, 
-  SafeAreaView, 
-  StatusBar,
-  Platform
-} from 'react-native';
-import LoginScreen from './src/components/LoginScreen';
-import MainScreen from './src/components/MainScreen';
-import ProfileScreen from './src/components/ProfileScreen';
+import React, { useEffect, useRef, useState } from 'react';
+import { ActivityIndicator, Platform, StyleSheet, UIManager, View } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import LoginScreen from './src/screens/LoginScreen';
+import MainScreen from './src/screens/MainScreen';
+import ProfileScreen from './src/screens/ProfileScreen';
+import { Task, TaskDraft, User } from './src/types';
+import { loadTasks, loadUser, saveTasks, saveUser } from './src/utils/storage';
+import { colors } from './src/theme';
+
+if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 export default function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [ready, setReady] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [showProfile, setShowProfile] = useState(false);
-  const [userData, setUserData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    avatar: ''
-  });
+  const hydrated = useRef(false);
 
-  const handleLogin = (userData: any) => {
-    setUserData(userData);
-    setIsLoggedIn(true);
-  };
-
-  const handleLogout = () => {
-    setUserData({
-      name: '',
-      email: '',
-      phone: '',
-      avatar: ''
+  // Chargement des données sauvegardées
+  useEffect(() => {
+    Promise.all([loadUser(), loadTasks()]).then(([u, t]) => {
+      setUser(u);
+      setTasks(t);
+      hydrated.current = true;
+      setReady(true);
     });
-    setIsLoggedIn(false);
+  }, []);
+
+  // Sauvegarde automatique
+  useEffect(() => {
+    if (hydrated.current) saveTasks(tasks);
+  }, [tasks]);
+
+  const login = (u: User) => {
+    setUser(u);
+    saveUser(u);
   };
+
+  const logout = () => {
+    setShowProfile(false);
+    setUser(null);
+    saveUser(null);
+  };
+
+  const reset = () => {
+    setTasks([]);
+    logout();
+  };
+
+  const addTask = (draft: TaskDraft) => {
+    const now = Date.now();
+    setTasks(prev => [{ ...draft, id: String(now), completed: false, createdAt: now }, ...prev]);
+  };
+
+  const updateTask = (id: string, draft: TaskDraft) =>
+    setTasks(prev => prev.map(t => (t.id === id ? { ...t, ...draft } : t)));
+
+  const toggleTask = (id: string) =>
+    setTasks(prev =>
+      prev.map(t =>
+        t.id === id
+          ? { ...t, completed: !t.completed, completedAt: !t.completed ? Date.now() : undefined }
+          : t
+      )
+    );
+
+  const deleteTask = (id: string) => setTasks(prev => prev.filter(t => t.id !== id));
+  const restoreTask = (task: Task) => setTasks(prev => [task, ...prev]);
+  const clearCompleted = () => setTasks(prev => prev.filter(t => !t.completed));
+
+  let screen: React.ReactNode;
+  if (!ready) {
+    screen = (
+      <View style={styles.loading}>
+        <ActivityIndicator color={colors.primary} />
+      </View>
+    );
+  } else if (!user) {
+    screen = <LoginScreen onLogin={login} />;
+  } else if (showProfile) {
+    screen = (
+      <ProfileScreen
+        user={user}
+        tasks={tasks}
+        onBack={() => setShowProfile(false)}
+        onLogout={logout}
+        onReset={reset}
+      />
+    );
+  } else {
+    screen = (
+      <MainScreen
+        user={user}
+        tasks={tasks}
+        onAdd={addTask}
+        onUpdate={updateTask}
+        onToggle={toggleTask}
+        onDelete={deleteTask}
+        onRestore={restoreTask}
+        onClearCompleted={clearCompleted}
+        onShowProfile={() => setShowProfile(true)}
+      />
+    );
+  }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" />
-      {!isLoggedIn ? (
-        <LoginScreen onLogin={handleLogin} />
-      ) : showProfile ? (
-        <ProfileScreen 
-          userData={userData} 
-          onBack={() => setShowProfile(false)}
-          onLogout={handleLogout}
-        />
-      ) : (
-        <MainScreen 
-          userData={userData}
-          onShowProfile={() => setShowProfile(true)}
-        />
-      )}
-    </SafeAreaView>
+    <SafeAreaProvider>
+      <StatusBar style="dark" />
+      {screen}
+    </SafeAreaProvider>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f7fa',
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
-  },
+  loading: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.background },
 });
