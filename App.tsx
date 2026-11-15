@@ -9,6 +9,7 @@ import ProfileScreen from './src/screens/ProfileScreen';
 import { Task, TaskDraft, User } from './src/types';
 import { loadTasks, loadUser, saveTasks, saveUser } from './src/utils/storage';
 import { colors } from './src/theme';
+import { deleteAvatarFile } from './src/utils/avatar';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -43,6 +44,7 @@ export default function App() {
   };
 
   const logout = () => {
+    deleteAvatarFile(user?.avatarUri);
     setShowProfile(false);
     setUser(null);
     saveUser(null);
@@ -51,6 +53,13 @@ export default function App() {
   const reset = () => {
     setTasks([]);
     logout();
+  };
+
+  const changeAvatar = (avatarUri?: string) => {
+    if (!user) return;
+    const next = { ...user, avatarUri };
+    setUser(next);
+    saveUser(next);
   };
 
   const addTask = (draft: TaskDraft) => {
@@ -92,6 +101,7 @@ export default function App() {
         onBack={() => setShowProfile(false)}
         onLogout={logout}
         onReset={reset}
+        onChangeAvatar={changeAvatar}
       />
     );
   } else {

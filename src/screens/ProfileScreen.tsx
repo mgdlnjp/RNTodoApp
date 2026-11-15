@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import Avatar from '../components/Avatar';
+import { AvatarSource, deleteAvatarFile, pickAvatar } from '../utils/avatar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { Category, Task, User } from '../types';
@@ -12,10 +14,55 @@ interface Props {
   onBack: () => void;
   onLogout: () => void;
   onReset: () => void;
+  onChangeAvatar: (uri?: string) => void;
 }
 
-export default function ProfileScreen({ user, tasks, onBack, onLogout, onReset }: Props) {
+export default function ProfileScreen({ user, tasks, onBack, onLogout, onReset, onChangeAvatar }: Props) {
   const insets = useSafeAreaInsets();
+  const [busy, setBusy] = useState(false);
+
+  const choose = async (source: AvatarSource) => {
+    setBusy(true);
+    try {
+      const uri = await pickAvatar(source);
+      if (uri) {
+        deleteAvatarFile(user.avatarUri);
+        onChangeAvatar(uri);
+      }
+    } catch (e) {
+      if (e instanceof Error && e.message === 'permission') {
+        Alert.alert(
+          'Accès refusé',
+          source === 'camera'
+            ? 'Autorise l’appareil photo dans les réglages pour prendre une photo.'
+            : 'Autorise l’accès aux photos dans les réglages pour en choisir une.'
+        );
+      } else {
+        Alert.alert('Oups', 'Impossible de récupérer cette photo. Réessaie.');
+      }
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const changePhoto = () =>
+    Alert.alert('Photo de profil', undefined, [
+      { text: 'Choisir dans la galerie', onPress: () => choose('library') },
+      { text: 'Prendre une photo', onPress: () => choose('camera') },
+      ...(user.avatarUri
+        ? [
+            {
+              text: 'Retirer la photo',
+              style: 'destructive' as const,
+              onPress: () => {
+                deleteAvatarFile(user.avatarUri);
+                onChangeAvatar(undefined);
+              },
+            },
+          ]
+        : []),
+      { text: 'Annuler', style: 'cancel' as const },
+    ]);
   const done = tasks.filter(t => t.completed).length;
   const todo = tasks.length - done;
   const rate = tasks.length ? Math.round((done / tasks.length) * 100) : 0;
@@ -44,9 +91,19 @@ export default function ProfileScreen({ user, tasks, onBack, onLogout, onReset }
 
       <ScrollView contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + space.xxl }]}>
         <View style={styles.identity}>
-          <View style={styles.avatar}>
-            <Text style={styles.avatarText}>{user.name.charAt(0).toUpperCase()}</Text>
-          </View>
+          <Pressable
+            onPress={changePhoto}
+            disabled={busy}
+            style={({ pressed }) => [styles.avatar, pressed && styles.pressed]}
+            accessibilityRole="button"
+            accessibilityLabel={user.avatarUri ? 'Changer ma photo' : 'Ajouter une photo'}
+          >
+            <Avatar uri={user.avatarUri} size={112} />
+            <View style={styles.cameraBadge}>
+              <Ionicons name="camera" size={16} color={colors.white} />
+            </View>
+          </Pressable>
+          {!user.avatarUri && <Text style={styles.addPhoto}>Ajouter une photo</Text>}
           <Text style={styles.name}>{user.name}</Text>
           <Text style={styles.caption}>
             {done === 0 ? 'Ta première mission t’attend' : `${done} mission${done > 1 ? 's' : ''} accomplie${done > 1 ? 's' : ''} 💪`}
@@ -126,18 +183,29 @@ const styles = StyleSheet.create({
 
   identity: { alignItems: 'center', paddingVertical: space.xl },
   avatar: {
-    width: 96,
-    height: 96,
-    borderRadius: 48,
-    backgroundColor: colors.primary,
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: colors.surface,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: space.lg,
-    borderTopWidth: 1,
-    borderTopColor: 'rgba(255,255,255,0.3)',
-    ...shadow(colors.primary, 1.5),
+    marginBottom: space.md,
+    ...shadow(undefined, 1.5),
   },
-  avatarText: { fontFamily: font.handBold, fontSize: font.handXL, lineHeight: font.handXLLine, color: colors.white },
+  cameraBadge: {
+    position: 'absolute',
+    right: 2,
+    bottom: 2,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: colors.primary,
+    borderWidth: 3,
+    borderColor: colors.paper,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  addPhoto: { fontSize: font.caption, color: colors.primary, fontWeight: font.bold, marginBottom: space.sm },
   name: { fontFamily: font.handBold, fontSize: font.handXL, lineHeight: font.handXLLine, color: colors.ink },
   caption: { fontSize: font.caption, color: colors.textMuted, marginTop: space.xs },
 

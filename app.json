@@ -28,6 +28,13 @@
           "resizeMode": "contain",
           "backgroundColor": "#F7F6F4"
         }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "OPLA accède à tes photos pour que tu puisses choisir ta photo de profil.",
+          "cameraPermission": "OPLA utilise l’appareil photo pour prendre ta photo de profil."
+        }
       ]
     ]
   }

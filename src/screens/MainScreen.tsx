@@ -16,6 +16,7 @@ import { fr } from 'date-fns/locale';
 import TaskItem from '../components/TaskItem';
 import TaskSheet from '../components/TaskSheet';
 import { MarginLine } from '../components/Paper';
+import Avatar from '../components/Avatar';
 import { Priority, Task, TaskDraft, User } from '../types';
 import { colors, font, notebook, radius, shadow, space } from '../theme';
 
@@ -166,7 +167,7 @@ export default function MainScreen(props: Props) {
           accessibilityLabel="Ouvrir mon profil"
           hitSlop={4}
         >
-          <Text style={styles.avatarText}>{user.name.charAt(0).toUpperCase()}</Text>
+          <Avatar uri={user.avatarUri} size={44} />
         </Pressable>
       </View>
 
@@ -348,14 +349,11 @@ const styles = StyleSheet.create({
     height: 48,
     borderRadius: radius.pill,
     backgroundColor: colors.surface,
-    borderWidth: 1.5,
-    borderColor: colors.ink,
     alignItems: 'center',
     justifyContent: 'center',
     marginLeft: space.lg,
-    transform: [{ rotate: '4deg' }],
+    ...shadow(),
   },
-  avatarText: { fontFamily: font.handBold, fontSize: font.handL, lineHeight: font.handLLine, color: colors.ink },
 
   postIt: {
     marginLeft: notebook.margin - space.sm,

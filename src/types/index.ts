@@ -16,4 +16,5 @@ export type TaskDraft = Pick<Task, 'title' | 'description' | 'priority' | 'categ
 
 export interface User {
   name: string;
+  avatarUri?: string; // photo copiée dans le dossier Documents de l'app
 }
