@@ -152,7 +152,7 @@ export default function TaskSheet({ visible, task, onClose, onSubmit, onDelete }
 
 const styles = StyleSheet.create({
   flex: { flex: 1, justifyContent: 'flex-end' },
-  backdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(28, 26, 25, 0.4)' },
+  backdrop: { ...StyleSheet.absoluteFill, backgroundColor: 'rgba(28, 26, 25, 0.4)' },
   sheet: {
     backgroundColor: colors.surface,
     borderTopLeftRadius: radius.lg,
