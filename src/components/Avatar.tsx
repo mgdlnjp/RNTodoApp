@@ -24,7 +24,12 @@ export default function Avatar({ uri, size, style }: Props) {
 
   return (
     <View style={[styles.frame, styles.placeholder, round, style]}>
-      <Ionicons name="person" size={size * 0.62} color="#FFFFFF" style={{ marginTop: size * 0.18 }} />
+      <Ionicons
+        name="person"
+        size={Math.round(size * 0.56)}
+        color="#FFFFFF"
+        style={{ lineHeight: Math.round(size * 0.56), textAlign: 'center' }}
+      />
     </View>
   );
 }
