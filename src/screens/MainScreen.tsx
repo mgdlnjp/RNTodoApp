@@ -30,6 +30,7 @@ interface Props {
   onDelete: (id: string) => void;
   onRestore: (task: Task) => void;
   onClearCompleted: () => void;
+  onClearAll: () => void;
   onShowProfile: () => void;
 }
 
@@ -136,6 +137,19 @@ export default function MainScreen(props: Props) {
       },
     ]);
 
+  const clearAll = () =>
+    Alert.alert('Effacer toute la liste ?', `Les ${total} mission${total > 1 ? 's' : ''} (à faire et barrées) seront supprimée${total > 1 ? 's' : ''}.`, [
+      { text: 'Annuler', style: 'cancel' },
+      {
+        text: 'Tout effacer',
+        style: 'destructive',
+        onPress: () => {
+          animate();
+          props.onClearAll();
+        },
+      },
+    ]);
+
   const header = (
     <View>
       {/* En-tête de page */}
@@ -214,8 +228,13 @@ export default function MainScreen(props: Props) {
             </Pressable>
           );
         })}
-        {filter === 'done' && done > 0 && (
-          <Pressable onPress={clearCompleted} hitSlop={10} style={styles.clear} accessibilityLabel="Effacer les barrées">
+        {((filter === 'done' && done > 0) || (filter === 'all' && total > 0)) && (
+          <Pressable
+            onPress={filter === 'done' ? clearCompleted : clearAll}
+            hitSlop={10}
+            style={styles.clear}
+            accessibilityLabel={filter === 'done' ? 'Effacer les barrées' : 'Effacer toute la liste'}
+          >
             <Ionicons name="trash-outline" size={18} color={colors.danger} />
           </Pressable>
         )}
@@ -322,8 +341,8 @@ const styles = StyleSheet.create({
     paddingRight: space.xl,
     paddingTop: space.lg,
   },
-  date: { fontFamily: font.hand, fontSize: font.handL, color: colors.primary },
-  hello: { fontFamily: font.handBold, fontSize: font.handXL, color: colors.ink, lineHeight: 52 },
+  date: { fontFamily: font.hand, fontSize: font.handL, lineHeight: font.handLLine, color: colors.primary },
+  hello: { fontFamily: font.handBold, fontSize: font.handXL, lineHeight: font.handXLLine, color: colors.ink },
   avatar: {
     width: 48,
     height: 48,
@@ -336,7 +355,7 @@ const styles = StyleSheet.create({
     marginLeft: space.lg,
     transform: [{ rotate: '4deg' }],
   },
-  avatarText: { fontFamily: font.handBold, fontSize: font.handL, color: colors.ink },
+  avatarText: { fontFamily: font.handBold, fontSize: font.handL, lineHeight: font.handLLine, color: colors.ink },
 
   postIt: {
     marginLeft: notebook.margin - space.sm,
@@ -363,8 +382,8 @@ const styles = StyleSheet.create({
     transform: [{ rotate: '3deg' }],
   },
   postItRow: { flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between' },
-  postItBig: { fontFamily: font.handBold, fontSize: font.handL + 6, color: colors.ink },
-  postItPct: { fontFamily: font.handBold, fontSize: font.handL, color: colors.primary },
+  postItBig: { fontFamily: font.handBold, fontSize: font.handM, lineHeight: font.handMLine, color: colors.ink },
+  postItPct: { fontFamily: font.handBold, fontSize: font.handL, lineHeight: font.handLLine, color: colors.primary },
   postItSub: { fontSize: font.caption, color: colors.textMuted, marginTop: space.xs },
   bar: {
     height: 6,
@@ -396,9 +415,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.highlighter,
     transform: [{ rotate: '-2deg' }],
   },
-  tabText: { fontFamily: font.hand, fontSize: font.handL, color: colors.textSubtle },
+  tabText: { fontFamily: font.hand, fontSize: font.handL, lineHeight: font.handLLine, color: colors.textSubtle },
   tabTextActive: { color: colors.ink },
-  tabCount: { fontFamily: font.hand, fontSize: font.title, color: colors.textSubtle },
+  tabCount: { fontFamily: font.hand, fontSize: font.caption, color: colors.textSubtle },
   clear: { marginLeft: 'auto', width: 44, height: 44, alignItems: 'center', justifyContent: 'center' },
 
   line: {
@@ -409,8 +428,8 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.rule,
   },
   linePressed: { backgroundColor: colors.highlighter },
-  placeholder: { fontFamily: font.hand, fontSize: font.handL, color: colors.textSubtle },
-  emptyNote: { fontFamily: font.hand, fontSize: font.handL, color: colors.textMuted },
+  placeholder: { fontFamily: font.hand, fontSize: font.handL, lineHeight: font.handLLine, color: colors.textSubtle },
+  emptyNote: { fontFamily: font.hand, fontSize: font.handL, lineHeight: font.handLLine, color: colors.textMuted },
 
   fab: {
     position: 'absolute',

@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     marginBottom: space.md,
   },
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: space.lg },
-  title: { fontFamily: font.handBold, fontSize: font.handL + 6, color: colors.ink },
+  title: { fontFamily: font.handBold, fontSize: font.handM, lineHeight: font.handMLine, color: colors.ink },
   iconBtn: {
     width: 44,
     height: 44,
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
   },
   titleInput: {
     fontFamily: font.hand,
-    fontSize: font.handL + 6,
+    fontSize: font.handM, lineHeight: font.handMLine,
     color: colors.ink,
     paddingVertical: space.sm,
     borderBottomWidth: 1,
@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
     borderColor: 'transparent',
   },
   segmentText: { fontSize: font.caption, color: colors.textMuted },
-  marks: { fontFamily: font.handBold, fontSize: font.title, letterSpacing: -1 },
+  marks: { fontFamily: font.handBold, fontSize: font.title },
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: space.sm, marginBottom: space.xl },
   catCard: {
     width: '48.5%',

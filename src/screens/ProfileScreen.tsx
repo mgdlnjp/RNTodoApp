@@ -137,8 +137,8 @@ const styles = StyleSheet.create({
     borderTopColor: 'rgba(255,255,255,0.3)',
     ...shadow(colors.primary, 1.5),
   },
-  avatarText: { fontFamily: font.handBold, fontSize: font.handXL, color: colors.white },
-  name: { fontFamily: font.handBold, fontSize: font.handXL, color: colors.ink },
+  avatarText: { fontFamily: font.handBold, fontSize: font.handXL, lineHeight: font.handXLLine, color: colors.white },
+  name: { fontFamily: font.handBold, fontSize: font.handXL, lineHeight: font.handXLLine, color: colors.ink },
   caption: { fontSize: font.caption, color: colors.textMuted, marginTop: space.xs },
 
   stats: { flexDirection: 'row', gap: space.md, marginBottom: space.xxl },
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
     ...shadow(),
   },
   statAccent: { backgroundColor: '#FFF6F2', borderWidth: 1, borderColor: colors.primaryBorder },
-  statValue: { fontFamily: font.handBold, fontSize: font.handL + 6, color: colors.ink },
+  statValue: { fontFamily: font.handBold, fontSize: font.handM, lineHeight: font.handMLine, color: colors.ink },
   statLabel: { fontSize: font.caption, color: colors.textMuted, marginTop: space.xs },
 
   sectionTitle: {

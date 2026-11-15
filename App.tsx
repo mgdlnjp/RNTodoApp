@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Platform, StyleSheet, UIManager, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { useFonts, Caveat_600SemiBold, Caveat_700Bold } from '@expo-google-fonts/caveat';
+import { useFonts, Nunito_600SemiBold, Nunito_800ExtraBold } from '@expo-google-fonts/nunito';
 import LoginScreen from './src/screens/LoginScreen';
 import MainScreen from './src/screens/MainScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
@@ -20,7 +20,7 @@ export default function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [showProfile, setShowProfile] = useState(false);
   const hydrated = useRef(false);
-  const [fontsLoaded, fontError] = useFonts({ Caveat_600SemiBold, Caveat_700Bold });
+  const [fontsLoaded, fontError] = useFonts({ Nunito_600SemiBold, Nunito_800ExtraBold });
 
   // Chargement des données sauvegardées
   useEffect(() => {
@@ -105,6 +105,7 @@ export default function App() {
         onDelete={deleteTask}
         onRestore={restoreTask}
         onClearCompleted={clearCompleted}
+        onClearAll={() => setTasks([])}
         onShowProfile={() => setShowProfile(true)}
       />
     );

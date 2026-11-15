@@ -2,7 +2,7 @@ import { Platform, ViewStyle } from 'react-native';
 import { Category, Priority } from './types';
 
 // Direction artistique « carnet » : papier crème, lignes bleues, marge orange,
-// écriture à la main pour les titres, feutre orange pour cocher et barrer.
+// titres en Nunito (arrondie), feutre orange pour cocher et barrer.
 export const colors = {
   primary: '#FE5410', // feutre orange (10 %)
   primarySoft: 'rgba(254, 84, 16, 0.08)',
@@ -35,7 +35,8 @@ export const notebook = { line: 56, margin: 56 };
 
 export const radius = { sm: 12, md: 16, lg: 24, pill: 999 };
 
-// Système : 4 tailles, 2 graisses. Manuscrite : 2 tailles.
+// Système : 4 tailles, 2 graisses. Police d'accent (Nunito, arrondie) : 3 tailles,
+// toujours avec une hauteur de ligne explicite pour éviter que le texte soit rogné.
 export const font = {
   display: 32,
   title: 20,
@@ -43,10 +44,14 @@ export const font = {
   caption: 13,
   regular: '400' as const,
   bold: '700' as const,
-  hand: 'Caveat_600SemiBold',
-  handBold: 'Caveat_700Bold',
-  handXL: 44,
-  handL: 26,
+  hand: 'Nunito_600SemiBold',
+  handBold: 'Nunito_800ExtraBold',
+  handXL: 28,
+  handXLLine: 36,
+  handM: 22,
+  handMLine: 30,
+  handL: 18,
+  handLLine: 26,
 };
 
 export const priorities: Record<Priority, { label: string; color: string; marks: string }> = {

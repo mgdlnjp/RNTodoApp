@@ -135,5 +135,5 @@ const styles = StyleSheet.create({
     transformOrigin: 'left',
   },
   meta: { fontSize: font.caption, color: colors.textMuted, marginTop: 2 },
-  marks: { fontFamily: font.handBold, fontSize: font.handL, marginLeft: space.sm, letterSpacing: -1 },
+  marks: { fontFamily: font.handBold, fontSize: font.handL, lineHeight: font.handLLine, marginLeft: space.sm },
 });
