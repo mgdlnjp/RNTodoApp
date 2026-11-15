@@ -1,19 +1,27 @@
 import { Platform, ViewStyle } from 'react-native';
 import { Category, Priority } from './types';
 
-// 60 / 30 / 10 : fond neutre, texte encre, orange OPLA en accent.
+// Direction artistique « carnet » : papier crème, lignes bleues, marge orange,
+// écriture à la main pour les titres, feutre orange pour cocher et barrer.
 export const colors = {
-  primary: '#FE5410',
+  primary: '#FE5410', // feutre orange (10 %)
   primarySoft: 'rgba(254, 84, 16, 0.08)',
   primaryBorder: 'rgba(254, 84, 16, 0.16)',
+  highlighter: 'rgba(254, 84, 16, 0.22)',
   brandBlue: '#00AEE4',
-  background: '#F7F6F4',
+  paper: '#FBF8F1', // fond papier (60 %)
+  paperDeep: '#F3EEE2',
+  rule: 'rgba(0, 174, 228, 0.18)', // lignes du cahier
+  margin: 'rgba(254, 84, 16, 0.45)', // marge rouge-orangée
+  postIt: '#FFE8A3',
+  postItShadow: '#B8913A',
+  background: '#FBF8F1',
   surface: '#FFFFFF',
-  ink: '#1C1A19',
-  text: 'rgba(28, 26, 25, 0.92)',
-  textMuted: 'rgba(28, 26, 25, 0.62)',
-  textSubtle: 'rgba(28, 26, 25, 0.40)',
-  border: 'rgba(28, 26, 25, 0.08)',
+  ink: '#1F2A44', // encre bleu nuit (30 %)
+  text: 'rgba(31, 42, 68, 0.92)',
+  textMuted: 'rgba(31, 42, 68, 0.62)',
+  textSubtle: 'rgba(31, 42, 68, 0.40)',
+  border: 'rgba(31, 42, 68, 0.10)',
   danger: '#E5484D',
   dangerSoft: 'rgba(229, 72, 77, 0.08)',
   white: '#FFFFFF',
@@ -22,9 +30,12 @@ export const colors = {
 // Grille de 4/8 points.
 export const space = { xs: 4, sm: 8, md: 12, lg: 16, xl: 24, xxl: 32, xxxl: 48 };
 
+// Géométrie du cahier : hauteur d'une ligne et position de la marge.
+export const notebook = { line: 56, margin: 56 };
+
 export const radius = { sm: 12, md: 16, lg: 24, pill: 999 };
 
-// 4 tailles, 2 graisses.
+// Système : 4 tailles, 2 graisses. Manuscrite : 2 tailles.
 export const font = {
   display: 32,
   title: 20,
@@ -32,12 +43,16 @@ export const font = {
   caption: 13,
   regular: '400' as const,
   bold: '700' as const,
+  hand: 'Caveat_600SemiBold',
+  handBold: 'Caveat_700Bold',
+  handXL: 44,
+  handL: 26,
 };
 
-export const priorities: Record<Priority, { label: string; color: string }> = {
-  haute: { label: 'Haute', color: '#E5484D' },
-  moyenne: { label: 'Moyenne', color: '#F5A524' },
-  basse: { label: 'Basse', color: '#12A594' },
+export const priorities: Record<Priority, { label: string; color: string; marks: string }> = {
+  haute: { label: 'Haute', color: '#E5484D', marks: '!!!' },
+  moyenne: { label: 'Moyenne', color: '#F5A524', marks: '!!' },
+  basse: { label: 'Basse', color: '#12A594', marks: '!' },
 };
 
 export const categories: Record<Category, { label: string; emoji: string; bg: string; fg: string }> = {
@@ -48,13 +63,13 @@ export const categories: Record<Category, { label: string; emoji: string; bg: st
 };
 
 // Ombres douces, teintées (jamais noir pur).
-export const shadow = (tint = '#3A2A20', strength = 1): ViewStyle =>
+export const shadow = (tint = '#5C4A2A', strength = 1): ViewStyle =>
   Platform.select<ViewStyle>({
     ios: {
       shadowColor: tint,
-      shadowOffset: { width: 0, height: 8 * strength },
-      shadowOpacity: 0.08 * strength,
-      shadowRadius: 16 * strength,
+      shadowOffset: { width: 0, height: 6 * strength },
+      shadowOpacity: 0.1 * strength,
+      shadowRadius: 12 * strength,
     },
     default: { elevation: 3 * strength, shadowColor: tint },
   })!;

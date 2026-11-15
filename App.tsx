@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Platform, StyleSheet, UIManager, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { useFonts, Caveat_600SemiBold, Caveat_700Bold } from '@expo-google-fonts/caveat';
 import LoginScreen from './src/screens/LoginScreen';
 import MainScreen from './src/screens/MainScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
@@ -19,6 +20,7 @@ export default function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [showProfile, setShowProfile] = useState(false);
   const hydrated = useRef(false);
+  const [fontsLoaded, fontError] = useFonts({ Caveat_600SemiBold, Caveat_700Bold });
 
   // Chargement des données sauvegardées
   useEffect(() => {
@@ -73,7 +75,8 @@ export default function App() {
   const clearCompleted = () => setTasks(prev => prev.filter(t => !t.completed));
 
   let screen: React.ReactNode;
-  if (!ready) {
+  // Si la police ne charge pas, on continue avec la police système.
+  if (!ready || (!fontsLoaded && !fontError)) {
     screen = (
       <View style={styles.loading}>
         <ActivityIndicator color={colors.primary} />
@@ -116,5 +119,5 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  loading: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.background },
+  loading: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.paper },
 });

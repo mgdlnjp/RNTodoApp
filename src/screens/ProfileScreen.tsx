@@ -3,6 +3,7 @@ import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-nati
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { Category, Task, User } from '../types';
+import { MarginLine, RuledLines } from '../components/Paper';
 import { categories, colors, font, radius, shadow, space } from '../theme';
 
 interface Props {
@@ -31,6 +32,8 @@ export default function ProfileScreen({ user, tasks, onBack, onLogout, onReset }
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
+      <RuledLines />
+      <MarginLine />
       <View style={styles.nav}>
         <Pressable onPress={onBack} style={styles.back} hitSlop={8} accessibilityLabel="Retour">
           <Ionicons name="chevron-back" size={24} color={colors.ink} />
@@ -109,7 +112,7 @@ function Stat({ value, label, accent }: { value: string; label: string; accent?:
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
-  container: { flex: 1, backgroundColor: colors.background },
+  container: { flex: 1, backgroundColor: colors.paper },
   nav: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -134,8 +137,8 @@ const styles = StyleSheet.create({
     borderTopColor: 'rgba(255,255,255,0.3)',
     ...shadow(colors.primary, 1.5),
   },
-  avatarText: { fontSize: font.display, fontWeight: font.bold, color: colors.white },
-  name: { fontSize: font.title, fontWeight: font.bold, color: colors.ink },
+  avatarText: { fontFamily: font.handBold, fontSize: font.handXL, color: colors.white },
+  name: { fontFamily: font.handBold, fontSize: font.handXL, color: colors.ink },
   caption: { fontSize: font.caption, color: colors.textMuted, marginTop: space.xs },
 
   stats: { flexDirection: 'row', gap: space.md, marginBottom: space.xxl },
@@ -148,7 +151,7 @@ const styles = StyleSheet.create({
     ...shadow(),
   },
   statAccent: { backgroundColor: '#FFF6F2', borderWidth: 1, borderColor: colors.primaryBorder },
-  statValue: { fontSize: font.title, fontWeight: font.bold, color: colors.ink, fontVariant: ['tabular-nums'] },
+  statValue: { fontFamily: font.handBold, fontSize: font.handL + 6, color: colors.ink },
   statLabel: { fontSize: font.caption, color: colors.textMuted, marginTop: space.xs },
 
   sectionTitle: {

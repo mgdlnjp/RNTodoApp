@@ -10,7 +10,8 @@ import {
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { colors, font, radius, shadow, space } from '../theme';
+import Paper from '../components/Paper';
+import { colors, font, notebook, radius, shadow, space } from '../theme';
 import { User } from '../types';
 
 interface Props {
@@ -29,6 +30,7 @@ export default function LoginScreen({ onLogin }: Props) {
   };
 
   return (
+    <Paper>
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={[styles.container, { paddingTop: insets.top, paddingBottom: Math.max(insets.bottom, space.xl) }]}
@@ -37,7 +39,7 @@ export default function LoginScreen({ onLogin }: Props) {
         <View style={styles.glow} />
         <Image source={require('../../assets/mainicon.png')} style={styles.logo} resizeMode="contain" />
         <Text style={styles.brand}>OPLA</Text>
-        <Text style={styles.tagline}>Tes missions du jour,{'\n'}sans prise de tête.</Text>
+        <Text style={styles.tagline}>Ta liste, à ta façon.{'\n'}Écris, coche, barre.</Text>
       </View>
 
       <View style={styles.form}>
@@ -63,11 +65,12 @@ export default function LoginScreen({ onLogin }: Props) {
         </Pressable>
       </View>
     </KeyboardAvoidingView>
+    </Paper>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background, paddingHorizontal: space.xl },
+  container: { flex: 1, paddingLeft: notebook.margin + space.lg, paddingRight: space.xl },
   hero: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   glow: {
     position: 'absolute',
@@ -81,24 +84,23 @@ const styles = StyleSheet.create({
   logo: { width: 128, height: 128, marginBottom: space.xl },
   brand: { fontSize: font.display, fontWeight: font.bold, color: colors.brandBlue, letterSpacing: 4 },
   tagline: {
-    fontSize: font.body,
+    fontFamily: font.hand,
+    fontSize: font.handL,
     color: colors.textMuted,
     textAlign: 'center',
     marginTop: space.md,
-    lineHeight: 24,
+    lineHeight: 32,
   },
   form: { paddingBottom: space.lg },
-  label: { fontSize: font.body, fontWeight: font.bold, color: colors.text, marginBottom: space.md },
+  label: { fontFamily: font.hand, fontSize: font.handL, color: colors.primary, marginBottom: space.xs },
   input: {
     height: 56,
-    backgroundColor: colors.surface,
-    borderRadius: radius.md,
-    paddingHorizontal: space.lg,
-    fontSize: font.body,
+    fontFamily: font.hand,
+    fontSize: font.handL + 6,
     color: colors.ink,
-    borderWidth: 1,
-    borderColor: colors.border,
-    marginBottom: space.lg,
+    borderBottomWidth: 2,
+    borderBottomColor: colors.ink,
+    marginBottom: space.xl,
   },
   cta: {
     height: 56,

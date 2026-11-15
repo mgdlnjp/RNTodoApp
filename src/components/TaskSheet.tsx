@@ -97,7 +97,7 @@ export default function TaskSheet({ visible, task, onClose, onSubmit, onDelete }
                     accessibilityRole="radio"
                     accessibilityState={{ selected: active }}
                   >
-                    <View style={[styles.dot, { backgroundColor: color }]} />
+                    <Text style={[styles.marks, { color }]}>{priorities[p].marks}</Text>
                     <Text style={[styles.segmentText, active && { color: colors.text, fontWeight: font.bold }]}>
                       {label}
                     </Text>
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
   flex: { flex: 1, justifyContent: 'flex-end' },
   backdrop: { ...StyleSheet.absoluteFill, backgroundColor: 'rgba(28, 26, 25, 0.4)' },
   sheet: {
-    backgroundColor: colors.surface,
+    backgroundColor: colors.paper,
     borderTopLeftRadius: radius.lg,
     borderTopRightRadius: radius.lg,
     paddingHorizontal: space.xl,
@@ -170,21 +170,22 @@ const styles = StyleSheet.create({
     marginBottom: space.md,
   },
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: space.lg },
-  title: { fontSize: font.title, fontWeight: font.bold, color: colors.ink },
+  title: { fontFamily: font.handBold, fontSize: font.handL + 6, color: colors.ink },
   iconBtn: {
     width: 44,
     height: 44,
     borderRadius: radius.pill,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.background,
+    backgroundColor: colors.paperDeep,
   },
   titleInput: {
-    fontSize: font.title,
+    fontFamily: font.hand,
+    fontSize: font.handL + 6,
     color: colors.ink,
-    paddingVertical: space.md,
+    paddingVertical: space.sm,
     borderBottomWidth: 1,
-    borderBottomColor: colors.border,
+    borderBottomColor: colors.rule,
   },
   noteInput: {
     fontSize: font.body,
@@ -205,7 +206,7 @@ const styles = StyleSheet.create({
   },
   segment: {
     flexDirection: 'row',
-    backgroundColor: colors.background,
+    backgroundColor: colors.paperDeep,
     borderRadius: radius.sm,
     padding: space.xs,
     gap: space.xs,
@@ -223,7 +224,7 @@ const styles = StyleSheet.create({
     borderColor: 'transparent',
   },
   segmentText: { fontSize: font.caption, color: colors.textMuted },
-  dot: { width: 8, height: 8, borderRadius: 4 },
+  marks: { fontFamily: font.handBold, fontSize: font.title, letterSpacing: -1 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: space.sm, marginBottom: space.xl },
   catCard: {
     width: '48.5%',
